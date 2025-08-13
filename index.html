@@ -1,1132 +1,445 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deportech </title>
-    <style>
-        /* Estilos base (sin cambios) */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            min-height: 100vh;
-            padding: 20px;
-            color: #fff;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            font-size: 2rem;
-            font-weight: bold;
-            background: linear-gradient(to right, #ff9966, #ff5e62);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            display: flex;
-            align-items: center;
-        }
-
-        .logo i {
-            margin-right: 10px;
-            font-size: 2.2rem;
-        }
-
-        .menu-toggle {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .menu-toggle:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .menu-toggle span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background: #fff;
-            margin: 2px 0;
-            transition: all 0.3s ease;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 60px 20px;
-            margin-bottom: 40px;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .hero p {
-            font-size: 1.5rem;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            opacity: 0; /* Inicialmente oculto para animación */
-            transform: translateY(50px);
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .card h2 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            color: #ffd700;
-        }
-
-        .card p {
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .card ul {
-            padding-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        .card li {
-            margin-bottom: 8px;
-        }
-
-        .card .highlight {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            border-radius: 8px;
-            margin: 15px 0;
-            border-left: 3px solid #ff5e62;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 1rem;
-        }
-
-        .form-group textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        .btn {
-            background: linear-gradient(45deg, #ff9966, #ff5e62);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 94, 98, 0.4);
-        }
-
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100%;
-            background: rgba(25, 25, 35, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            transition: all 0.4s ease;
-            z-index: 100;
-            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
-            overflow-y: auto;
-        }
-
-        .sidebar.active {
-            left: 0;
-        }
-
-        .sidebar-header {
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .sidebar-nav {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-nav a {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            margin: 5px 0;
-            border-radius: 10px;
-            color: #fff;
-            text-decoration: none;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            opacity: 0; /* Para animación */
-            transform: translateX(-20px);
-        }
-
-        .sidebar-nav a i {
-            font-size: 1.5rem;
-            margin-right: 15px;
-            width: 24px;
-            text-align: center;
-        }
-
-        .sidebar-nav a:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-nav a.active {
-            background: linear-gradient(45deg, #ff9966, #ff5e62);
-            box-shadow: 0 4px 10px rgba(255, 94, 98, 0.4);
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 99;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
-        }
-
-        .overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .page {
-            display: none;
-            opacity: 0; /* Para animación */
-            transform: translateY(20px);
-        }
-
-        .page.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px 0;
-            margin-top: 50px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .footer-links a {
-            color: #ffd700;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            text-decoration: underline;
-        }
-
-        .copyright {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .team {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .team-member {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-            opacity: 0; /* Para animación */
-            transform: translateY(50px);
-        }
-
-        .team-member img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 15px;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .team-member h3 {
-            margin-bottom: 5px;
-            color: #ffd700;
-        }
-
-        .team-member .position {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 15px;
-            font-style: italic;
-        }
-
-        /* Nuevas animaciones */
-        .animated-text {
-            display: inline-block;
-            overflow: hidden;
-        }
-        
-        .animated-char {
-            display: inline-block;
-            opacity: 0;
-            transform: translateY(1em);
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .floating {
-            animation: floating 3s ease-in-out infinite;
-        }
-        
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero p {
-                font-size: 1.2rem;
-            }
-            
-            .footer-links {
-                flex-direction: column;
-                gap: 10px;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Deportech</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="overlay" id="overlay"></div>
-    
-    <div class="container">
-        <header>
-            <div class="logo pulse">
-              <i>🏆</i> <span class="animated-text" id="logoText" style="color: white;">Deportech</span>
+  <div id="overlay" class="overlay"></div>
 
+  <div class="container">
+    <header>
+      <div id="siteLogo" class="logo" role="button" tabindex="0">
+        <i class="logo-emoji">🏆</i>
+        <div class="logo-title">Deportech</div>
+      </div>
+      <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+
+    <main id="homePage" class="page active">
+      <section class="hero">
+        <h1 id="mainTitle">Bienvenido a Deportech</h1>
+        <p id="subTitle">Noticias, análisis y fichas completas de los principales deportes</p>
+      </section>
+
+      <section id="homeCards" class="content">
+        <article class="card" data-target="futbolPage" role="button" tabindex="0">
+          <img class="card-image" src="https://picsum.photos/seed/futbol/1200/700" alt="Fútbol">
+          <h2>Fútbol</h2>
+          <p class="brief">Historia, reglas, tácticas y actualidad del deporte más seguido.</p>
+        </article>
+
+        <article class="card" data-target="baloncestoPage" role="button" tabindex="0">
+          <img class="card-image" src="https://picsum.photos/seed/baloncesto/1200/700" alt="Baloncesto">
+          <h2>Baloncesto</h2>
+          <p class="brief">Ligas, estilos de juego y campeonatos internacionales.</p>
+        </article>
+
+        <article class="card" data-target="tenisPage" role="button" tabindex="0">
+          <img class="card-image" src="https://picsum.photos/seed/tenis/1200/700" alt="Tenis">
+          <h2>Tenis</h2>
+          <p class="brief">Grand Slams, superficies y preparación de élite.</p>
+        </article>
+
+        <article class="card" data-target="natacionPage" role="button" tabindex="0">
+          <img class="card-image" src="https://picsum.photos/seed/natacion/1200/700" alt="Natación">
+          <h2>Natación</h2>
+          <p class="brief">Técnica, estilos y grandes competiciones.</p>
+        </article>
+
+        <article class="card" data-target="ciclismoPage" role="button" tabindex="0">
+          <img class="card-image" src="https://picsum.photos/seed/ciclismo/1200/700" alt="Ciclismo">
+          <h2>Ciclismo</h2>
+          <p class="brief">Grandes vueltas, tácticas de equipo y tecnología.</p>
+        </article>
+
+        <article class="card" data-target="atletismoPage" role="button" tabindex="0">
+          <img class="card-image" src="https://picsum.photos/seed/atletismo/1200/700" alt="Atletismo">
+          <h2>Atletismo</h2>
+          <p class="brief">Velocidad, fondo, saltos y lanzamientos: entrenamiento y técnica.</p>
+        </article>
+
+        <article class="card" data-target="beisbolPage" role="button" tabindex="0">
+          <img class="card-image" src="https://picsum.photos/seed/beisbol/1200/700" alt="Béisbol">
+          <h2>Béisbol</h2>
+          <p class="brief">Formato, ligas y desarrollo de lanzadores y bateadores.</p>
+        </article>
+
+        <article class="card" data-target="boxeoPage" role="button" tabindex="0">
+          <img class="card-image" src="https://picsum.photos/seed/boxeo/1200/700" alt="Boxeo">
+          <h2>Boxeo</h2>
+          <p class="brief">Historia, categorías de peso y preparación profesional.</p>
+        </article>
+      </section>
+    </main>
+
+    <section id="futbolPage" class="page">
+      <section class="hero sport-hero" data-pos="center center">
+        <img class="hero-image" src="https://picsum.photos/seed/futbol-hero/1600/480" alt="Fútbol hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-inner">
+          <h1>Fútbol</h1>
+          <p>Noticias, análisis táctico y fichas de jugadores y equipos.</p>
+        </div>
+      </section>
+
+      <section class="sport-text">
+        <h2>Resumen</h2>
+        <p>El fútbol es un deporte de equipo jugado entre dos equipos de once jugadores. Es el deporte más popular del mundo y combina técnica individual con organización colectiva.</p>
+
+        <h2>Origen</h2>
+        <p>El fútbol moderno se codificó en Inglaterra a mediados del siglo XIX. Juegos de patear una pelota existen desde la antigüedad, pero la estandarización de reglas y la formación de clubes ocurrieron en la era victoriana.</p>
+
+        <h2>Tácticas</h2>
+        <p>Sistemas como 4-3-3, 4-2-3-1 o 3-5-2 definen organización y roles. Conceptos clave: presión alta, bloque medio-bajo, posesión progresiva, transiciones rápidas y juego por bandas.</p>
+
+        <h2>Jugadores y roles</h2>
+        <p>Portero, defensas centrales, laterales, centrocampistas organizadores, extremos y delanteros. Cada rol tiene requisitos físicos y técnicos distintos.</p>
+
+        <h2>Entrenamiento</h2>
+        <p>Sesiones de técnica, táctica, fuerza y recuperación. El trabajo en vídeo y análisis de datos guía decisiones tácticas y de plantilla.</p>
+      </section>
+    </section>
+
+    <section id="baloncestoPage" class="page">
+      <section class="hero sport-hero" data-pos="center center">
+        <img class="hero-image" src="https://picsum.photos/seed/baloncesto-hero/1600/480" alt="Baloncesto hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-inner">
+          <h1>Baloncesto</h1>
+          <p>Ligas, jugadores y tácticas de alto rendimiento.</p>
+        </div>
+      </section>
+
+      <section class="sport-text">
+        <h2>Resumen</h2>
+        <p>Deporte de cinco contra cinco en una cancha con canastas. Alta intensidad física y táctica, con énfasis en creación de ventaja espacial y eficiencia de tiro.</p>
+
+        <h2>Origen</h2>
+        <p>Inventado por James Naismith en 1891 en Springfield, Massachusetts, como deporte de interior para mantener a los jugadores activos durante el invierno.</p>
+
+        <h2>Tácticas</h2>
+        <p>Sistemas: pick-and-roll, defensa zonal, defensa individual, quintetos versátiles y small-ball. Importante: movimientos sin balón, spacing y rebote ofensivo.</p>
+
+        <h2>Jugadores clave</h2>
+        <p>Bases organizadores, escoltas tiradores, aleros polivalentes, ala-pívots y pívots. La versatilidad hoy es altamente valorada.</p>
+      </section>
+    </section>
+
+    <section id="tenisPage" class="page">
+      <section class="hero sport-hero" data-pos="center center">
+        <img class="hero-image" src="https://picsum.photos/seed/tenis-hero/1600/480" alt="Tenis hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-inner">
+          <h1>Tenis</h1>
+          <p>Grand Slams, jugadores y preparación física.</p>
+        </div>
+      </section>
+
+      <section class="sport-text">
+        <h2>Resumen</h2>
+        <p>Deporte individual o por parejas en pistas de césped, tierra o pista dura. Combina resistencia, técnica y táctica de punto.</p>
+
+        <h2>Origen</h2>
+        <p>Raíces en juegos de pelota medievales; el tenis moderno (lawn tennis) se popularizó en Inglaterra en el siglo XIX. Wimbledon se disputa desde 1877.</p>
+
+        <h2>Tácticas</h2>
+        <p>En césped prevalece el servicio y volea; en tierra la paciencia y construcción de puntos. Planes: atacar con servicio, variar ritmos y usar ángulos.</p>
+
+        <h2>Preparación</h2>
+        <p>Entrenamiento técnico, físico y mental. La recuperación entre partidos en torneos es crítica.</p>
+      </section>
+    </section>
+
+    <section id="natacionPage" class="page">
+      <section class="hero sport-hero" data-pos="center center">
+        <img class="hero-image" src="https://picsum.photos/seed/natacion-hero/1600/480" alt="Natación hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-inner">
+          <h1>Natación</h1>
+          <p>Técnica, entrenamiento y grandes competiciones.</p>
+        </div>
+      </section>
+
+      <section class="sport-text">
+        <h2>Resumen</h2>
+        <p>Deporte individual y por equipos con estilos principales: crol, espalda, braza y mariposa. Importa técnica, eficiencia y potencia.</p>
+
+        <h2>Origen</h2>
+        <p>Práctica ancestral; organizada como deporte en el siglo XIX. Presente en los Juegos Olímpicos modernos desde 1896.</p>
+
+        <h2>Estrategia</h2>
+        <p>Gestión del ritmo, salidas, virajes y fase subacuática. En relevos, el orden de nadadores y transiciones son decisivos.</p>
+
+        <h2>Entrenamiento</h2>
+        <p>Volumen en piscina, series específicas y trabajo seco. Análisis técnico y control de recuperación son habituales.</p>
+      </section>
+    </section>
+
+    <section id="ciclismoPage" class="page">
+      <section class="hero sport-hero" data-pos="center center">
+        <img class="hero-image" src="https://picsum.photos/seed/ciclismo-hero/1600/480" alt="Ciclismo hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-inner">
+          <h1>Ciclismo</h1>
+          <p>Grandes vueltas, cotas y tácticas de equipo.</p>
+        </div>
+      </section>
+
+      <section class="sport-text">
+        <h2>Resumen</h2>
+        <p>Modalidades: ruta, pista, MTB y ciclocross. En ruta se combina resistencia, táctica de equipo y habilidades técnicas.</p>
+
+        <h2>Origen</h2>
+        <p>Tras la invención de la bicicleta en el siglo XIX surgieron las primeras carreras organizadas en Europa en la década de 1860-1870.</p>
+
+        <h2>Tácticas</h2>
+        <p>Trabajo de equipo (domestiques, líder), escapadas, control del pelotón y sprints. La gestión de esfuerzo y posicionamiento es esencial.</p>
+
+        <h2>Tecnología y entrenamiento</h2>
+        <p>Entrenamiento por potencia, gestión nutricional y aerodinámica. Material especializado influye en rendimiento.</p>
+      </section>
+    </section>
+
+    <section id="atletismoPage" class="page">
+      <section class="hero sport-hero" data-pos="center center">
+        <img class="hero-image" src="https://picsum.photos/seed/atletismo-hero/1600/480" alt="Atletismo hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-inner">
+          <h1>Atletismo</h1>
+          <p>Velocidad, fondo y campo: resultados y entrenamiento.</p>
+        </div>
+      </section>
+
+      <section class="sport-text">
+        <h2>Resumen</h2>
+        <p>Agrupa pruebas de pista y campo: velocidad, mediofondo, fondo, saltos y lanzamientos.</p>
+
+        <h2>Origen</h2>
+        <p>Remonta a competiciones de la antigüedad; como deporte moderno se organizó desde el siglo XIX y es central en los Juegos Olímpicos.</p>
+
+        <h2>Tácticas</h2>
+        <p>En mediofondo/fondo se gestionan ritmos y posicionamiento; en campo la técnica y consistencia son determinantes.</p>
+
+        <h2>Entrenamiento</h2>
+        <p>Periodización, fuerza, técnica y recuperación. Planes individualizados para picos de rendimiento.</p>
+      </section>
+    </section>
+
+    <section id="beisbolPage" class="page">
+      <section class="hero sport-hero" data-pos="center center">
+        <img class="hero-image" src="https://picsum.photos/seed/beisbol-hero/1600/480" alt="Béisbol hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-inner">
+          <h1>Béisbol</h1>
+          <p>Ligas, estadísticas y desarrollo de jugadores.</p>
+        </div>
+      </section>
+
+      <section class="sport-text">
+        <h2>Resumen</h2>
+        <p>Deporte de bateo y fildeo entre dos equipos. Combina estrategia de lanzamientos, selección de bateo y defensa posicionada.</p>
+
+        <h2>Origen</h2>
+        <p>Evolucionó en el siglo XIX en Estados Unidos a partir de juegos británicos de pelota y se profesionalizó con ligas formales.</p>
+
+        <h2>Tácticas</h2>
+        <p>Gestión del bullpen, estrategias de toque/robos, alineaciones según matchups y shifts. Estadísticas avanzadas guían decisiones.</p>
+
+        <h2>Desarrollo</h2>
+        <p>Academias, scouting y programas de fortalecimiento. Análisis biomecánico para pitchers y bateadores.</p>
+      </section>
+    </section>
+
+    <section id="boxeoPage" class="page">
+      <section class="hero sport-hero" data-pos="center center">
+        <img class="hero-image" src="https://picsum.photos/seed/boxeo-hero/1600/480" alt="Boxeo hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-inner">
+          <h1>Boxeo</h1>
+          <p>Combates, categorías y preparación profesional.</p>
+        </div>
+      </section>
+
+      <section class="sport-text">
+        <h2>Resumen</h2>
+        <p>Deporte de combate entre dos púgiles con rounds cronometrados. Importa técnica, estrategia y acondicionamiento.</p>
+
+        <h2>Origen</h2>
+        <p>Prácticas de combate con puños existen desde la antigüedad; el boxeo moderno se formalizó en el siglo XIX con reglas codificadas.</p>
+
+        <h2>Tácticas</h2>
+        <p>Control de distancia, juego de piernas, combinaciones, clinch y gestión de rounds. Ajustes según el estilo del rival.</p>
+
+        <h2>Preparación</h2>
+        <p>Sparring, padwork, acondicionamiento aeróbico/anaeróbico y control de peso. La preparación mental es clave.</p>
+      </section>
+    </section>
+
+    <section id="aboutPage" class="page">
+      <section class="hero">
+        <h1>Sobre Nosotros</h1>
+        <p>Equipo editorial y colaboradores</p>
+      </section>
+
+      <section class="about-grid">
+        <div class="card about-card">
+          <h2>Nuestra historia</h2>
+          <p>Somos un equipo de estudiantes y periodistas deportivos dedicados a informar con rigor y pasión. Publicamos reportajes, análisis tácticos y seguimiento de eventos con enfoque en datos y contexto histórico. Nuestro objetivo es ofrecer contenido claro, verificado y con perspectiva para lectores hispanohablantes.</p>
+        </div>
+
+        <div class="team-grid">
+          <div class="team-card">
+            <img src="https://picsum.photos/seed/juliana/400/400" alt="Juliana" class="team-avatar">
+            <div class="team-meta">
+              <h3>Juliana Algarin</h3>
+              <div class="team-role">Directora editorial</div>
+              <p class="team-bio">Líder del proyecto. Coordina contenidos, edita piezas largas y supervisa la línea editorial y verificación de datos.</p>
+              <div class="team-links">
+                <a href="https://x.com/JulianaAlgarin" target="_blank" rel="noopener noreferrer">X</a>
+                <a href="https://instagram.com/juliana" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
             </div>
-            <button class="menu-toggle floating" id="menuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </header>
+          </div>
 
-        <!-- Home Page -->
-        <div id="homePage" class="page active">
-            <section class="hero">
-                <h1 id="mainTitle">Bienvenido a Deportech</h1>
-                <p id="subTitle">Tu fuente confiable para las últimas noticias, eventos y análisis deportivos</p>
-            </section>
-
-            <section class="content">
-                <div class="card" id="card1">
-                    <h2>Fútbol</h2>
-                    <p>El deporte más popular del mundo con más de 4 mil millones de seguidores. Sigue a tus equipos y jugadores favoritos en todas las competiciones.</p>
-                    <div class="highlight">
-                        <p><strong>Próximo evento:</strong> Final de la UEFA Champions League - 1 de Junio</p>
-                    </div>
-                    <p><a href="https://es.wikipedia.org/wiki/F%C3%BAtbol" target="_blank" rel="noopener noreferrer">Champions League</a></p>
-                </div>
-                <div class="card" id="card2">
-                    <h2>Baloncesto</h2>
-                    <p>Deporte de equipo donde dos conjuntos compiten por encestar un balón en la canasta contraria. La NBA es la liga más importante del mundo.</p>
-                    <div class="highlight">
-                        <p><strong>Destacado:</strong> Playoffs NBA en curso - ¡No te pierdas la acción!</p>
-                    </div>
-                    <p><a href="https://es.wikipedia.org/wiki/Baloncesto" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-                <div class="card" id="card3">
-                    <h2>Tenis</h2>
-                    <p>Deporte de raqueta que enfrenta a dos jugadores (individuales) o dos parejas (dobles). Los Grand Slams son los torneos más prestigiosos.</p>
-                    <div class="highlight">
-                        <p><strong>Próximo torneo:</strong> Roland Garros - Del 28 de Mayo al 11 de Junio</p>
-                    </div>
-                    <p><a href="https://es.wikipedia.org/wiki/Tenis" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-            </section>
-        </div>
-
-        <!-- Football Page -->
-        <div id="futbolPage" class="page">
-            <section class="hero">
-                <h1>Fútbol</h1>
-                <p>El deporte rey en todo el mundo</p>
-            </section>
-
-            <section class="content">
-                <div class="card">
-                    <h2>Liga de Campeones</h2>
-                    <p>La competición más prestigiosa a nivel de clubes en Europa. Equipos como Real Madrid, Bayern Múnich y Manchester City compiten por el título.</p>
-                    <ul>
-                        <li>Máximo ganador: Real Madrid (14 títulos)</li>
-                        <li>Formato actual: Fase de grupos + eliminatorias</li>
-                        <li>Premio al mejor jugador: Jugador del Año de la UEFA</li>
-                    </ul>
-                    <p><a href="https://es.uefa.com/uefachampionsleague/" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-                <div class="card">
-                    <h2>Copa Mundial</h2>
-                    <p>El evento deportivo más importante a nivel mundial, organizado cada 4 años por la FIFA. La próxima edición será en 2026 en EE.UU., México y Canadá.</p>
-                    <ul>
-                        <li>Máximo ganador: Brasil (5 títulos)</li>
-                        <li>Próximo mundial: 2026 (48 selecciones)</li>
-                        <li>Último campeón: Argentina (2022)</li>
-                    </ul>
-                    <p><a href="https://www.fifa.com/fifaplus/es/tournaments/mens/worldcup" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-                <div class="card">
-                    <h2>Ligas Nacionales</h2>
-                    <p>Las competiciones domésticas son la base del fútbol mundial. Las 5 grandes ligas europeas son:</p>
-                    <ul>
-                        <li>Premier League (Inglaterra)</li>
-                        <li>LaLiga (España)</li>
-                        <li>Serie A (Italia)</li>
-                        <li>Bundesliga (Alemania)</li>
-                        <li>Ligue 1 (Francia)</li>
-                    </ul>
-                    <p>Estas ligas concentran a los mejores jugadores del mundo y generan miles de millones en ingresos.</p>
-                    <p>
-                        <a href="https://www.premierleague.com/" target="_blank" rel="noopener noreferrer">Premier League</a> ·
-                        <a href="https://www.laliga.com/" target="_blank" rel="noopener noreferrer">LaLiga</a> ·
-                        <a href="https://www.legaseriea.it/" target="_blank" rel="noopener noreferrer">Serie A</a> ·
-                        <a href="https://www.bundesliga.com/es/bundesliga" target="_blank" rel="noopener noreferrer">Bundesliga</a> ·
-                        <a href="https://www.ligue1.fr/" target="_blank" rel="noopener noreferrer">Ligue 1</a>
-                    </p>
-                </div>
-            </section>
-        </div>
-
-        <!-- Basketball Page -->
-        <div id="baloncestoPage" class="page">
-            <section class="hero">
-                <h1>Baloncesto</h1>
-                <p>El juego de la canasta</p>
-            </section>
-
-            <section class="content">
-                <div class="card">
-                    <h2>NBA</h2>
-                    <p>La liga de baloncesto más importante del mundo, fundada en 1946. Actualmente cuenta con 30 equipos divididos en dos conferencias (Este y Oeste).</p>
-                    <ul>
-                        <li>Máximo ganador: Boston Celtics y Los Angeles Lakers (17 títulos)</li>
-                        <li>Temporada regular: 82 partidos por equipo</li>
-                        <li>MVP más reciente: Nikola Jokić (Denver Nuggets)</li>
-                    </ul>
-                    <p><a href="https://www.nba.com/" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-                <div class="card">
-                    <h2>Liga ACB</h2>
-                    <p>La competición de baloncesto más importante de España, considerada una de las mejores ligas europeas.</p>
-                    <ul>
-                        <li>Fundada: 1957</li>
-                        <li>Equipos históricos: Real Madrid, FC Barcelona, Baskonia</li>
-                        <li>Formato: 18 equipos, fase regular y playoffs</li>
-                    </ul>
-                    <p>La ACB ha desarrollado jugadores como Pau Gasol, Marc Gasol y Ricky Rubio.</p>
-                    <p><a href="https://www.acb.com/" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-                <div class="card">
-                    <h2>FIBA y Competiciones Internacionales</h2>
-                    <p>La Federación Internacional de Baloncesto (FIBA) organiza competiciones mundiales y continentales:</p>
-                    <ul>
-                        <li>Copa Mundial de Baloncesto</li>
-                        <li>EuroBasket</li>
-                        <li>Juegos Olímpicos</li>
-                    </ul>
-                    <p>España es una potencia mundial, habiendo ganado el Mundial en 2006 y 2019.</p>
-                    <p><a href="https://www.fiba.basketball/es" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-            </section>
-        </div>
-
-        <!-- Tennis Page -->
-        <div id="tenisPage" class="page">
-            <section class="hero">
-                <h1>Tenis</h1>
-                <p>El deporte de raqueta más popular</p>
-            </section>
-
-            <section class="content">
-                <div class="card">
-                    <h2>Grand Slams</h2>
-                    <p>Los cuatro torneos más importantes del circuito:</p>
-                    <ul>
-                        <li><strong>Abierto de Australia:</strong> Enero, Melbourne</li>
-                        <li><strong>Roland Garros:</strong> Mayo-Junio, París (arcilla)</li>
-                        <li><strong>Wimbledon:</strong> Junio-Julio, Londres (césped)</li>
-                        <li><strong>US Open:</strong> Agosto-Septiembre, Nueva York</li>
-                    </ul>
-                    <p>Ganar los cuatro en un mismo año se conoce como "Grand Slam".</p>
-                    <p><a href="https://es.wikipedia.org/wiki/Grand_Slam_(tenis)" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-                <div class="card">
-                    <h2>ATP Tour</h2>
-                    <p>El circuito profesional masculino de tenis, organizado por la Asociación de Tenistas Profesionales (ATP).</p>
-                    <ul>
-                        <li>Torneos: ATP Masters 1000, ATP 500, ATP 250</li>
-                        <li>Sistema de puntos: Mantenido durante 52 semanas</li>
-                        <li>Número 1 actual: Novak Djokovic (Serbia)</li>
-                    </ul>
-                    <p>El ATP Finals es el torneo que cierra la temporada con los 8 mejores tenistas.</p>
-                    <p><a href="https://www.atptour.com/es/" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-                <div class="card">
-                    <h2>WTA Tour</h2>
-                    <p>El circuito profesional femenino, organizado por la Asociación de Tenis Femenino (WTA).</p>
-                    <ul>
-                        <li>Torneos: WTA 1000, WTA 500, WTA 250</li>
-                        <li>Número 1 actual: Iga Świątek (Polonia)</li>
-                        <li>Leyendas: Steffi Graf, Serena Williams, Martina Navratilova</li>
-                    </ul>
-                    <p>El tenis femenino ha experimentado un gran crecimiento en popularidad y premios económicos.</p>
-                    <p><a href="https://www.wtatennis.com/es" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-            </section>
-        </div>
-
-        <!-- Swimming Page -->
-        <div id="natacionPage" class="page">
-            <section class="hero">
-                <h1>Natación</h1>
-                <p>El deporte acuático por excelencia</p>
-            </section>
-
-            <section class="content">
-                <div class="card">
-                    <h2>Estilos de Natación</h2>
-                    <p>Existen cuatro estilos principales en competición:</p>
-                    <ul>
-                        <li><strong>Crol:</strong> El estilo más rápido y popular</li>
-                        <li><strong>Espalda:</strong> Se nada de espaldas, con movimiento alterno de brazos</li>
-                        <li><strong>Braza:</strong> El estilo más técnico y antiguo</li>
-                        <li><strong>Mariposa:</strong> Requiere gran fuerza y coordinación</li>
-                    </ul>
-                    <p>En pruebas de estilos, los nadadores compiten en los cuatro estilos.</p>
-                    <p><a href="https://es.wikipedia.org/wiki/Nataci%C3%B3n#Estilos" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-                <div class="card">
-                    <h2>Competiciones Importantes</h2>
-                    <p>La natación es uno de los deportes estrellas en los Juegos Olímpicos:</p>
-                    <ul>
-                        <li>Juegos Olímpicos</li>
-                        <li>Campeonatos Mundiales (FINA)</li>
-                        <li>Campeonatos Continentales (Europeos, Panamericanos)</li>
-                    </ul>
-                    <p>Michael Phelps es el deportista olímpico más condecorado de la historia con 28 medallas.</p>
-                    <p>
-                        <a href="https://olympics.com/es/sports/swimming/" target="_blank" rel="noopener noreferrer">Juegos Olímpicos</a> ·
-                        <a href="https://www.worldaquatics.com/" target="_blank" rel="noopener noreferrer">World Aquatics (FINA)</a>
-                    </p>
-                </div>
-                <div class="card">
-                    <h2>Beneficios para la Salud</h2>
-                    <p>La natación es uno de los deportes más completos:</p>
-                    <ul>
-                        <li>Trabaja todos los grupos musculares</li>
-                        <li>Mejora la capacidad cardiovascular</li>
-                        <li>Bajo impacto para articulaciones</li>
-                        <li>Desarrolla flexibilidad y resistencia</li>
-                    </ul>
-                    <p>Recomendado para personas de todas las edades y condiciones físicas.</p>
-                    <p><a href="https://es.wikipedia.org/wiki/Nataci%C3%B3n" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-            </section>
-        </div>
-
-        <!-- Cycling Page -->
-        <div id="ciclismoPage" class="page">
-            <section class="hero">
-                <h1>Ciclismo</h1>
-                <p>Deporte sobre ruedas con gran tradición</p>
-            </section>
-
-            <section class="content">
-                <div class="card">
-                    <h2>Grandes Vueltas</h2>
-                    <p>Las tres competiciones por etapas más importantes:</p>
-                    <ul>
-                        <li><strong>Tour de Francia:</strong> Julio, 21 etapas, maillot amarillo</li>
-                        <li><strong>Giro de Italia:</strong> Mayo, maillot rosa</li>
-                        <li><strong>Vuelta a España:</strong> Agosto-Septiembre, maillot rojo</li>
-                    </ul>
-                    <p>Ganar las tres en un mismo año se conoce como "Triple Corona".</p>
-                    <p><a href="https://es.wikipedia.org/wiki/Grandes_vueltas" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-                <div class="card">
-                    <h2>Disciplinas del Ciclismo</h2>
-                    <p>El ciclismo abarca diferentes especialidades:</p>
-                    <ul>
-                        <li><strong>Ciclismo en ruta:</strong> Competiciones en carretera</li>
-                        <li><strong>Ciclismo en pista:</strong> Velódromos cubiertos</li>
-                        <li><strong>Ciclismo de montaña:</strong> Terrenos irregulares</li>
-                        <li><strong>Ciclocrós:</strong> Circuitos mixtos con obstáculos</li>
-                        <li><strong>BMX:</strong> Acrobacias y carreras en pistas cortas</li>
-                    </ul>
-                    <p><a href="https://es.wikipedia.org/wiki/Ciclismo" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-                <div class="card">
-                    <h2>Leyendas del Ciclismo</h2>
-                    <p>Algunos de los ciclistas más destacados de la historia:</p>
-                    <ul>
-                        <li><strong>Eddy Merckx:</strong> "El Caníbal", ganador de 11 Grandes Vueltas</li>
-                        <li><strong>Miguel Induráin:</strong> Único en ganar 5 Tours consecutivos</li>
-                        <li><strong>Chris Froome:</strong> Ganador de las tres Grandes Vueltas</li>
-                        <li><strong>Annemiek van Vleuten:</strong> Dominadora del ciclismo femenino</li>
-                    </ul>
-                    <p><a href="https://es.wikipedia.org/wiki/Historia_del_ciclismo" target="_blank" rel="noopener noreferrer">Fuente</a></p>
-                </div>
-            </section>
-        </div>
-
-        <!-- Contact Page -->
-        <div id="contactoPage" class="page">
-            <section class="hero">
-                <h1>Contacto</h1>
-                <p>¿Tienes alguna pregunta o sugerencia? Escríbenos</p>
-            </section>
-
-            <section class="content">
-                <div class="card">
-                    <h2>Formulario de Contacto</h2>
-                    <form id="contactForm">
-                        <div class="form-group">
-                            <label for="name">Nombre:</label>
-                            <input type="text" id="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="subject">Asunto:</label>
-                            <input type="text" id="subject" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Mensaje:</label>
-                            <textarea id="message" required></textarea>
-                        </div>
-                        <button type="submit" class="btn">Enviar Mensaje</button>
-                    </form>
-                </div>
-                <div class="card">
-                    <h2>Información de Contacto</h2>
-                    <p>Estamos disponibles para atender tus consultas:</p>
-                    <ul>
-                        <li><strong>Dirección:</strong> Calle 51 # 43 - 83, Medellin, Colombia</li>
-                        <li><strong>Teléfono:</strong> +57 300 255 54 01</li>
-                        <li><strong>Email:</strong> info@deportech.com</li>
-                        <li><strong>Horario:</strong> Lunes a Viernes, 9:00 - 18:00</li>
-                    </ul>
-                    <h3>Redes Sociales</h3>
-                    <p>Síguenos para mantenerte actualizado:</p>
-                    <ul>
-                        <li>Twitter: @deportech</li>
-                        <li>Instagram: @deportechOficial</li>
-                        <li>Facebook: Deportech</li>
-                        <li>YouTube: Deportech TV</li>
-                    </ul>
-                </div>
-            </section>
-        </div>
-
-        <!-- About Us Page -->
-        <div id="aboutPage" class="page">
-            <section class="hero">
-                <h1>Sobre Nosotros</h1>
-                <p>Conoce nuestra historia y equipo</p>
-            </section>
-
-            <section class="content">
-                <div class="card">
-                    <h2>Nuestra Historia</h2>
-                    <p>Somos un grupo de estudiantes amantes y apasionados por el deporte. </p>
-                    <p>Nuestro objetivo es comunicar y analizar eventos, resultados, estadísticas, historias y novedades relacionadas con el mundo del deporte a nivel profesional. </p>
-                    <div class="highlight">
-                        <p><strong>Misión:</strong> Informar, entretener y crear comunidad entre los amantes del deporte.</p>
-                        <p><strong>Visión:</strong> Ser el referente de información deportiva digital en español.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <h2>Nuestro Equipo</h2>
-                    <p>Contamos con un equipo de profesionales apasionados por el deporte y el periodismo:</p>
-                    <div class="team">
-                        <div class="team-member">
-                            <img src="https://preview.redd.it/ah4sksgwvtz71.jpg?width=1080&crop=smart&auto=webp&s=4ea0447d29dc642e264783e0c24de835882edb5b" alt="Director">
-                            <h3>Juliana Algarin</h3>
-                            <div class="position">Lider de grupo.</div>
-                            <p>Comentarista de deportes.</p>
-                        </div>
-                        <div class="team-member">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT54izpBrj9401EpGvpm4aWoeSBRs3FPLSflg&s" alt="Editora">
-                            <h3>Jhorman Cardona</h3>
-                            <div class="position">Analista en deportes.</div>
-                            <p>Especialista en deportes internacionales.</p>
-                        </div>
-                        <div class="team-member">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUiUaI0BLSfvT372avgrn1t-l2HskO3rSGGA&s" alt="Redactor">
-                            <h3>Ana Buriticá</h3>
-                            <div class="position">Comentarista de deporte.</div>
-                            <p>Experta en deportes.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <h2>Nuestros Valores</h2>
-                    <ul>
-                        <li><strong>Pasión:</strong> Amamos el deporte y transmitimos esa pasión en cada artículo</li>
-                        <li><strong>Integridad:</strong> Informamos con honestidad y transparencia</li>
-                        <li><strong>Innovación:</strong> Buscamos constantemente nuevas formas de contar historias</li>
-                        <li><strong>Comunidad:</strong> Valoramos a nuestros lectores y su participación</li>
-                        <li><strong>Excelencia:</strong> Nos esforzamos por la máxima calidad en nuestro trabajo</li>
-                    </ul>
-                    <p>Creemos que el deporte es una herramienta poderosa para unir personas y crear un mundo mejor.</p>
-                </div>
-            </section>
-        </div>
-
-        <!-- Footer -->
-        <footer>
-            <div class="footer-links">
-                <a href="#" data-page="homePage">Inicio</a>
-                <a href="#" data-page="contactoPage">Contacto</a>
-                <a href="#" data-page="aboutPage">Sobre Nosotros</a>
-                <a href="#">Términos y Condiciones</a>
-                <a href="#">Política de Privacidad</a>
+          <div class="team-card">
+            <img src="https://picsum.photos/seed/jhorman/400/400" alt="Jhorman" class="team-avatar">
+            <div class="team-meta">
+              <h3>Jhorman Cardona</h3>
+              <div class="team-role">Analista de datos</div>
+              <p class="team-bio">Especialista en estadísticas deportivas, crea análisis cuantitativos y dashboards para seguimiento de rendimiento.</p>
+              <div class="team-links">
+                <a href="https://x.com/JhormanCardona" target="_blank" rel="noopener noreferrer">X</a>
+                <a href="https://linkedin.com/in/jhorman" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              </div>
             </div>
-            <div class="copyright">
-                &copy; 2025. Todos los derechos reservados.
+          </div>
+
+          <div class="team-card">
+            <img src="https://picsum.photos/seed/ana/400/400" alt="Ana" class="team-avatar">
+            <div class="team-meta">
+              <h3>Ana Buriticá</h3>
+              <div class="team-role">Reportera</div>
+              <p class="team-bio">Cobertura de eventos y entrevistas. Producción de crónicas y piezas en terreno con foco en historias humanas del deporte.</p>
+              <div class="team-links">
+                <a href="https://x.com/AnaBuritica" target="_blank" rel="noopener noreferrer">X</a>
+                <a href="https://instagram.com/ana" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
             </div>
-        </footer>
+          </div>
+
+          <div class="team-card">
+            <img src="https://picsum.photos/seed/maria/400/400" alt="María" class="team-avatar">
+            <div class="team-meta">
+              <h3>María López</h3>
+              <div class="team-role">Productora multimedia</div>
+              <p class="team-bio">Encargada de video, edición y redes. Se ocupa de adaptar los contenidos a formato multimedia y redes sociales.</p>
+              <div class="team-links">
+                <a href="https://x.com/MariaLopez" target="_blank" rel="noopener noreferrer">X</a>
+                <a href="https://instagram.com/maria" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section id="contactoPage" class="page">
+      <section class="hero">
+        <h1>Contacto</h1>
+        <p>¿Tienes alguna pregunta o sugerencia? Escríbenos</p>
+      </section>
+      <section class="contact-grid">
+        <div class="card contact-card">
+          <h2>Formulario de contacto</h2>
+          <form id="contactForm" class="contact-form">
+            <label for="name">Nombre</label>
+            <input id="name" type="text" required>
+            <label for="email">Email</label>
+            <input id="email" type="email" required>
+            <label for="subject">Asunto</label>
+            <input id="subject" type="text" required>
+            <label for="message">Mensaje</label>
+            <textarea id="message" required></textarea>
+            <button class="btn" type="submit">Enviar Mensaje</button>
+          </form>
+        </div>
+
+        <div class="card contact-card">
+          <h2>Información</h2>
+          <ul class="info-list">
+            <li>Dirección: Calle 51 # 43 - 83, Medellín, Colombia</li>
+            <li>Teléfono: <a href="tel:+573002555401">+57 300 255 54 01</a></li>
+            <li>Email: <a href="mailto:info@deportech.com">info@deportech.com</a></li>
+          </ul>
+        </div>
+      </section>
+    </section>
+
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col footer-brand">
+        <div class="brand-row">
+          <div class="brand-logo">🏆</div>
+          <div>
+            <div class="brand-name">Deportech</div>
+          </div>
+        </div>
+        <p class="brand-desc">Cobertura deportiva con análisis y contexto. Síguenos en las redes para actualizaciones.</p>
+      </div>
+
+      <div class="footer-col footer-nav-col">
+        <h4>Enlaces</h4>
+        <ul class="footer-links-list">
+          <li><a href="#" data-page="homePage">Inicio</a></li>
+          <li><a href="#" data-page="contactoPage">Contacto</a></li>
+          <li><a href="#" data-page="aboutPage">Sobre Nosotros</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-socials">
+        <h4>Nuestras redes</h4>
+        <ul class="social-list">
+          <li><a href="https://x.com/DeportechES" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M4 4l16 16M20 4L4 20"/></svg> X / @DeportechES</a></li>
+          <li><a href="https://instagram.com/deportech_oficial" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3"/></svg> Instagram / @deportech_oficial</a></li>
+          <li><a href="https://facebook.com/DeportechOficial" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M13 3h2v4h-2v10h-3V7H8V4h2V2h3v1z"/></svg> Facebook / DeportechOficial</a></li>
+          <li><a href="https://youtube.com/DeportechTV" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M10 15l5-3-5-3v6zM21 7s0-1-.8-1.8C19 4 12 4 12 4s-7 0-8.2.2C4 5 4 6 4 6S3.8 8 3.8 9.2 4 12 4 12s0 1 .2 2c.2 1.2 1 2.8 1 2.8s7 0 8.2-.2c1.2-.2 8.8-.2 8.8-.2s.8-1.2.8-2.2-.8-3-1-3.8c-.2-.8-.8-1.2-.8-1.2z"/></svg> YouTube / DeportechTV</a></li>
+        </ul>
+      </div>
     </div>
 
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <i>🏆</i> <span>Menú</span>
-            </div>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="#home" class="active" data-page="homePage">
-                <i>🏠</i> Inicio
-            </a>
-            <a href="#futbol" data-page="futbolPage">
-                <i>⚽</i> Fútbol
-            </a>
-            <a href="#baloncesto" data-page="baloncestoPage">
-                <i>🏀</i> Baloncesto
-            </a>
-            <a href="#tenis" data-page="tenisPage">
-                <i>🎾</i> Tenis
-            </a>
-            <a href="#natacion" data-page="natacionPage">
-                <i>🏊</i> Natación
-            </a>
-            <a href="#ciclismo" data-page="ciclismoPage">
-                <i>🚴</i> Ciclismo
-            </a>
-            <a href="#contacto" data-page="contactoPage">
-                <i>✉️</i> Contacto
-            </a>
-            <a href="#nosotros" data-page="aboutPage">
-                <i>👥</i> Sobre Nosotros
-            </a>
-        </nav>
-    </aside>
+    <div class="footer-bottom">
+      <div class="copyright-small">© 2025 Deportech. Todos los derechos reservados.</div>
+    </div>
+  </footer>
 
-    <!-- GSAP Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    
-    <script>
-        // Registrar el plugin ScrollTrigger
-        gsap.registerPlugin(ScrollTrigger);
-        
-        // Animaciones iniciales al cargar la página
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animación del logo
-            const logoText = document.getElementById('logoText');
-            const chars = logoText.textContent.split('');
-            logoText.innerHTML = '';
-            
-            chars.forEach((char, index) => {
-                const span = document.createElement('span');
-                span.className = 'animated-char';
-                span.textContent = char;
-                logoText.appendChild(span);
-                
-                gsap.to(span, {
-                    duration: 0.5,
-                    delay: index * 0.05,
-                    opacity: 1,
-                    y: 0,
-                    ease: 'back.out(1.7)'
-                });
-            });
-            
-            // Animación del título principal
-            gsap.from('#mainTitle', {
-                duration: 1.2,
-                y: 50,
-                opacity: 0,
-                ease: 'power3.out',
-                delay: 0.5
-            });
-            
-            // Animación del subtítulo
-            gsap.from('#subTitle', {
-                duration: 1.2,
-                y: 30,
-                opacity: 0,
-                ease: 'power3.out',
-                delay: 0.8
-            });
-            
-            // Animación de las tarjetas
-            gsap.utils.toArray('.card').forEach((card, index) => {
-                gsap.to(card, {
-                    duration: 0.8,
-                    delay: index * 0.15,
-                    opacity: 1,
-                    y: 0,
-                    ease: 'back.out(1.7)'
-                });
-            });
-            
-            // Animación del menú flotante
-            gsap.to('.menu-toggle', {
-                y: -5,
-                duration: 1.5,
-                repeat: -1,
-                yoyo: true,
-                ease: 'sine.inOut'
-            });
-            
-            // Animación para elementos con ScrollTrigger
-            gsap.utils.toArray('.card, .team-member').forEach(item => {
-                gsap.fromTo(item, 
-                    { opacity: 0, y: 50 },
-                    {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.8,
-                        ease: 'power2.out',
-                        scrollTrigger: {
-                            trigger: item,
-                            start: 'top 90%',
-                            toggleActions: 'play none none none'
-                        }
-                    }
-                );
-            });
-            
-            // Animación para los enlaces de la barra lateral
-            gsap.utils.toArray('.sidebar-nav a').forEach((link, index) => {
-                gsap.to(link, {
-                    duration: 0.5,
-                    delay: index * 0.1,
-                    opacity: 1,
-                    x: 0,
-                    ease: 'power2.out'
-                });
-            });
-        });
-        
-        // Sidebar functionality
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        const navLinks = document.querySelectorAll('.sidebar-nav a, .footer-links a');
-        const pages = document.querySelectorAll('.page');
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo"><i>🏆</i> <span>Menú</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="active" data-page="homePage"><i>🏠</i> Inicio</a>
+      <a href="#" data-page="futbolPage"><i>⚽</i> Fútbol</a>
+      <a href="#" data-page="baloncestoPage"><i>🏀</i> Baloncesto</a>
+      <a href="#" data-page="tenisPage"><i>🎾</i> Tenis</a>
+      <a href="#" data-page="natacionPage"><i>🏊</i> Natación</a>
+      <a href="#" data-page="ciclismoPage"><i>🚴</i> Ciclismo</a>
+      <a href="#" data-page="atletismoPage"><i>🏃</i> Atletismo</a>
+      <a href="#" data-page="beisbolPage"><i>⚾</i> Béisbol</a>
+      <a href="#" data-page="boxeoPage"><i>🥊</i> Boxeo</a>
+      <a href="#" data-page="contactoPage"><i>✉️</i> Contacto</a>
+      <a href="#" data-page="aboutPage"><i>👥</i> Sobre Nosotros</a>
+    </nav>
+  </aside>
 
-        // Toggle sidebar con animación GSAP
-        menuToggle.addEventListener('click', () => {
-            if (sidebar.classList.contains('active')) {
-                // Animación para cerrar la barra lateral
-                gsap.to(sidebar, {
-                    x: -300,
-                    duration: 0.4,
-                    ease: 'power2.inOut',
-                    onComplete: () => sidebar.classList.remove('active')
-                });
-                
-                // Animación para desvanecer el overlay
-                gsap.to(overlay, {
-                    opacity: 0,
-                    duration: 0.3,
-                    onComplete: () => {
-                        overlay.classList.remove('active');
-                    }
-                });
-            } else {
-                // Mostrar la barra lateral con animación
-                sidebar.classList.add('active');
-                overlay.classList.add('active');
-                
-                // Animación para abrir la barra lateral
-                gsap.fromTo(sidebar, 
-                    { x: -300 },
-                    { x: 0, duration: 0.4, ease: 'power2.out' }
-                );
-                
-                // Animación para mostrar el overlay
-                gsap.fromTo(overlay, 
-                    { opacity: 0 },
-                    { opacity: 1, duration: 0.3 }
-                );
-            }
-        });
-
-        // Close sidebar with overlay
-        overlay.addEventListener('click', () => {
-            // Animación para cerrar la barra lateral
-            gsap.to(sidebar, {
-                x: -300,
-                duration: 0.4,
-                ease: 'power2.inOut',
-                onComplete: () => sidebar.classList.remove('active')
-            });
-            
-            // Animación para desvanecer el overlay
-            gsap.to(overlay, {
-                opacity: 0,
-                duration: 0.3,
-                onComplete: () => {
-                    overlay.classList.remove('active');
-                }
-            });
-        });
-
-        // Handle navigation con animación GSAP
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // Remove active class from all links
-                navLinks.forEach(l => l.classList.remove('active'));
-                
-                // Add active class to clicked link
-                link.classList.add('active');
-                
-                // Get page data
-                const pageId = link.getAttribute('data-page');
-                
-                // Close sidebar
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-                
-                // Show selected page with animation
-                showPage(pageId);
-            });
-        });
-
-        // Function to show selected page with GSAP animation
-        function showPage(pageId) {
-            // Hide all pages with animation
-            pages.forEach(page => {
-                if (page.classList.contains('active')) {
-                    gsap.to(page, {
-                        opacity: 0,
-                        y: 20,
-                        duration: 0.4,
-                        ease: 'power2.inOut',
-                        onComplete: () => {
-                            page.classList.remove('active');
-                        }
-                    });
-                }
-            });
-            
-            // Show selected page with animation
-            const selectedPage = document.getElementById(pageId);
-            if (selectedPage) {
-                selectedPage.classList.add('active');
-                
-                gsap.fromTo(selectedPage, 
-                    { opacity: 0, y: -20 },
-                    {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.6,
-                        ease: 'power2.out'
-                    }
-                );
-            } else {
-                // Show home page if page not found
-                document.getElementById('homePage').classList.add('active');
-            }
-            
-            // Scroll to top with animation
-            gsap.to(window, {
-                duration: 0.8,
-                scrollTo: 0,
-                ease: 'power2.inOut'
-            });
-        }
-
-        // Form submission
-        const contactForm = document.getElementById('contactForm');
-        if (contactForm) {
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                // Animación de éxito
-                const btn = contactForm.querySelector('.btn');
-                gsap.to(btn, {
-                    backgroundColor: '#4CAF50',
-                    duration: 0.3,
-                    onComplete: () => {
-                        alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
-                        contactForm.reset();
-                        
-                        // Restaurar color original
-                        gsap.to(btn, {
-                            backgroundColor: '',
-                            delay: 0.5,
-                            duration: 0.5
-                        });
-                    }
-                });
-            });
-        }
-
-        // Animación para elementos del equipo
-        document.querySelectorAll('.team-member').forEach(member => {
-            member.addEventListener('mouseenter', () => {
-                gsap.to(member, {
-                    scale: 1.05,
-                    y: -10,
-                    duration: 0.3,
-                    ease: 'power2.out'
-                });
-            });
-            
-            member.addEventListener('mouseleave', () => {
-                gsap.to(member, {
-                    scale: 1,
-                    y: 0,
-                    duration: 0.3,
-                    ease: 'power2.out'
-                });
-            });
-        });
-        
-        // Animación al hacer hover en las tarjetas
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                gsap.to(card, {
-                    boxShadow: '0 15px 30px rgba(0, 0, 0, 0.3)',
-                    duration: 0.3
-                });
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                gsap.to(card, {
-                    boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)',
-                    duration: 0.3
-                });
-            });
-        });
-    </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
